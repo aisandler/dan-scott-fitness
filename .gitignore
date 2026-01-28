@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Archives
+*.zip
+
+# IDE
+.vscode/
+.idea/
+
+# Claude local cache
+.claude/
+
+# Large image archives (keep individual images)
