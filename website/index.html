@@ -262,7 +262,7 @@
             inset: 0;
             background-image: url('images/hero-desktop.jpg');
             background-size: cover;
-            background-position: left center;
+            background-position: center center;
             z-index: -1;
         }
 
@@ -347,9 +347,10 @@
             align-items: center;
             gap: 0.75rem;
             font-family: 'Oswald', sans-serif;
-            font-size: clamp(1.5rem, 3vw, 2.7rem);
-            letter-spacing: 0.3em;
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            letter-spacing: 0.2em;
             color: var(--text-muted);
+            white-space: nowrap;
         }
 
         .tagline-bar span {
@@ -358,11 +359,11 @@
         }
 
         .tagline-bar .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background: var(--orange);
             border-radius: 50%;
-            margin: 0 2rem;
+            margin: 0 1.5rem;
         }
 
 
@@ -418,14 +419,44 @@
         /* About Section */
         .about-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
 
         .about-text p {
             margin-bottom: 1.5rem;
             color: var(--text);
+        }
+
+        /* Collapsible Bio on Mobile */
+        .bio-collapsible {
+            position: relative;
+        }
+
+        .bio-extra {
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        }
+
+        .bio-toggle-btn {
+            display: none;
+            margin-top: 1rem;
+            background: var(--glass-frosted-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-frosted-border);
+            border-radius: var(--glass-radius);
+            color: var(--orange);
+            padding: 0.6rem 1.25rem;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--glass-transition);
+        }
+
+        .bio-toggle-btn:hover {
+            background: var(--glass-frosted-bg-hover);
+            border-color: var(--orange);
         }
 
         .credentials {
@@ -442,41 +473,43 @@
             padding: 0.5rem 1rem;
             border-radius: var(--glass-radius);
             font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            border: 1px solid var(--glass-frosted-border);
+            font-weight: 700;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid rgba(232, 122, 46, 0.35);
             box-shadow: var(--shadow-glass-subtle);
             transition: all var(--glass-transition);
         }
 
         .credential-tag:hover {
-            background: var(--glass-frosted-bg-hover);
-            border-color: var(--glass-frosted-border-hover);
+            background: var(--glass-accent-muted);
+            border-color: var(--orange);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glass-lift);
         }
 
-        /* Four Pillars */
-        .pillars-grid {
+        /* Four Pillars Standalone Section */
+        .pillars-section-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
         }
 
-        .pillar-card {
+        .pillar-standalone-card {
             position: relative;
             overflow: hidden;
             background: var(--glass-frosted-bg);
             backdrop-filter: blur(var(--glass-frosted-blur));
             -webkit-backdrop-filter: blur(var(--glass-frosted-blur));
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: var(--glass-radius-lg);
-            text-align: center;
             border: 1px solid var(--glass-frosted-border);
             box-shadow: var(--shadow-glass-subtle);
             transition: all var(--glass-transition);
         }
 
-        .pillar-card::before {
+        .pillar-standalone-card::before {
             content: '';
             position: absolute;
             inset: 0;
@@ -485,40 +518,101 @@
             border-radius: inherit;
         }
 
-        .pillar-card:hover {
+        .pillar-standalone-card:hover {
             background: var(--glass-frosted-bg-hover);
             border-color: var(--glass-frosted-border-hover);
-            box-shadow: var(--shadow-glass-lift);
-            transform: translateY(-6px);
+            box-shadow: var(--shadow-glass-elevated);
         }
 
-        .pillar-card:hover .pillar-icon {
-            box-shadow: var(--shadow-glass-glow);
+        .pillar-standalone-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1rem;
         }
 
-        .pillar-icon {
+        .pillar-icon-lg {
             position: relative;
-            width: 50px;
-            height: 50px;
-            background: var(--orange);
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            background: linear-gradient(135deg, rgba(232, 122, 46, 0.25) 0%, rgba(255, 179, 71, 0.15) 100%);
+            border: 2px solid rgba(232, 122, 46, 0.4);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 1.25rem;
-            transition: box-shadow var(--glass-transition);
+            font-size: 1.5rem;
+            transition: all var(--glass-transition);
         }
 
-        .pillar-card h3 {
-            font-size: 1rem;
+        .pillar-icon-lg svg {
+            stroke: var(--orange);
+        }
+
+        .pillar-standalone-card:hover .pillar-icon-lg {
+            box-shadow: 0 0 20px -3px rgba(232, 122, 46, 0.5);
+            border-color: var(--orange);
+        }
+
+        .pillar-standalone-card h3 {
+            font-size: 1.35rem;
             color: var(--white);
-            margin-bottom: 1rem;
         }
 
-        .pillar-card p {
-            font-size: 0.875rem;
+        .pillar-standalone-card .pillar-tagline {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        .pillar-expand-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+
+        .pillar-expand-content.expanded {
+            max-height: 300px;
+            opacity: 1;
+        }
+
+        .pillar-expand-content p {
+            padding-top: 1rem;
+            font-size: 0.9375rem;
             color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .pillar-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            background: none;
+            border: none;
+            color: var(--orange);
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .pillar-read-more:hover {
+            color: var(--orange-hover);
+        }
+
+        .pillar-read-more .chevron {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .pillar-read-more.active .chevron {
+            transform: rotate(180deg);
         }
 
         /* How It Works */
@@ -769,6 +863,142 @@
             font-size: 0.9375rem;
         }
 
+        /* Pricing Section */
+        .pricing-card {
+            position: relative;
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--glass-frosted-bg);
+            backdrop-filter: blur(var(--glass-frosted-blur));
+            -webkit-backdrop-filter: blur(var(--glass-frosted-blur));
+            padding: 3rem;
+            border-radius: var(--glass-radius-lg);
+            border: 2px solid rgba(232, 122, 46, 0.4);
+            box-shadow: var(--shadow-glass-glow);
+            text-align: center;
+            animation: glass-border-iridescent 4s ease-in-out infinite;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-gradient-overlay);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .pricing-amount {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-period {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-commitment {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            color: var(--text);
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features .check {
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Testimonials Placeholder */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--glass-frosted-bg);
+            backdrop-filter: blur(var(--glass-frosted-blur));
+            -webkit-backdrop-filter: blur(var(--glass-frosted-blur));
+            padding: 2rem;
+            border-radius: var(--glass-radius-lg);
+            border: 1px solid var(--glass-frosted-border);
+            box-shadow: var(--shadow-glass-subtle);
+            text-align: center;
+            opacity: 0.5;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .testimonial-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--glass-gradient-overlay);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .testimonial-placeholder-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .testimonial-placeholder-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-muted);
+        }
+
+        .testimonial-card .coming-soon {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+
         /* CTA Section */
         .cta-section {
             text-align: center;
@@ -814,9 +1044,10 @@
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
         }
 
         .footer-logo {
@@ -835,7 +1066,6 @@
         .footer-logo .logo-fitness {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 0.5rem;
             font-size: 0.5rem;
             letter-spacing: 0.25em;
@@ -854,24 +1084,45 @@
 
         .footer-tagline {
             font-family: 'Oswald', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.2em;
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
             color: var(--text-muted);
+            margin-top: 0.75rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.75rem;
+            color: var(--white);
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8125rem;
+            padding: 0.25rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: var(--orange);
         }
 
         .footer-copy {
             font-size: 0.75rem;
             color: var(--text-muted);
+            grid-column: 1 / -1;
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray);
+            margin-top: 1rem;
         }
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .about-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .pillars-grid {
+            .pillars-section-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
@@ -896,8 +1147,10 @@
             }
 
             .hero-bg {
-                background-image: url('images/hero-mobile.jpg');
-                background-position: center top;
+                background-size: 100% auto;
+                background-position: center 60px;
+                background-repeat: no-repeat;
+                background-color: #0d0d0d;
             }
 
             .hero-bg::after {
@@ -905,22 +1158,39 @@
             }
 
             .hero-text {
-                padding-top: 40vh;
+                padding-top: 0;
             }
 
             .tagline-bar {
-                bottom: 2rem;
-                font-size: 1rem;
-                letter-spacing: 0.2em;
+                bottom: 1.5rem;
+                font-size: 0.65rem;
+                letter-spacing: 0.1em;
+                gap: 0.25rem;
             }
 
             .tagline-bar .dot {
-                width: 8px;
-                height: 8px;
-                margin: 0 1rem;
+                width: 5px;
+                height: 5px;
+                margin: 0 0.4rem;
             }
 
-            .pillars-grid {
+            /* Collapsible bio on mobile */
+            .bio-toggle-btn {
+                display: inline-block;
+            }
+
+            .bio-extra.collapsed {
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+            }
+
+            .bio-extra.expanded {
+                max-height: 1000px;
+                opacity: 1;
+            }
+
+            .pillars-section-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -930,9 +1200,20 @@
                 grid-template-columns: 1fr;
             }
 
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
             .footer-content {
-                flex-direction: column;
-                gap: 1.5rem;
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-logo .logo-fitness {
+                justify-content: center;
+            }
+
+            .footer-col {
                 text-align: center;
             }
         }
@@ -1135,6 +1416,13 @@
             box-shadow: 0 0 0 3px var(--glass-accent-muted), var(--shadow-glass-glow);
         }
 
+        .form-input.error,
+        .form-select.error,
+        .form-textarea.error {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+        }
+
         .form-input::placeholder,
         .form-textarea::placeholder {
             color: var(--text-muted);
@@ -1181,6 +1469,50 @@
             font-size: 1rem;
         }
 
+        /* Thank You State */
+        .thank-you-state {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .thank-you-state.active {
+            display: block;
+        }
+
+        .thank-you-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--glass-accent-muted);
+            border: 2px solid var(--orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: glass-glow-pulse 2s ease-in-out infinite;
+        }
+
+        .thank-you-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--orange);
+        }
+
+        .thank-you-state h3 {
+            font-size: 1.75rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .thank-you-state p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 400px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
         .body-no-scroll {
             overflow: hidden;
         }
@@ -1213,7 +1545,9 @@
         /* Accessibility - Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             .step-number,
-            .comparison-card.is {
+            .comparison-card.is,
+            .pricing-card,
+            .thank-you-icon {
                 animation: none;
             }
 
@@ -1229,12 +1563,14 @@
                 background: rgba(13, 13, 13, 0.98);
             }
 
-            .pillar-card,
+            .pillar-standalone-card,
             .included-card,
             .comparison-card,
             .for-item,
             .credential-tag,
-            .modal-content {
+            .modal-content,
+            .pricing-card,
+            .testimonial-card {
                 background: rgba(42, 42, 42, 0.95);
                 border: 1px solid rgba(58, 58, 58, 1);
             }
@@ -1254,7 +1590,9 @@
         </a>
         <div class="nav-links">
             <a href="#about">Bio</a>
+            <a href="#pillars">Pillars</a>
             <a href="#how-it-works">How Coaching Works</a>
+            <a href="#pricing">Pricing</a>
             <a href="#contact">Connect</a>
             <a href="#" class="btn" onclick="openModal(); return false;">Apply for Coaching</a>
         </div>
@@ -1268,7 +1606,9 @@
     <!-- Mobile Navigation -->
     <div class="mobile-nav" id="mobileNav">
         <a href="#about" onclick="closeMenu()">Bio</a>
+        <a href="#pillars" onclick="closeMenu()">Pillars</a>
         <a href="#how-it-works" onclick="closeMenu()">How Coaching Works</a>
+        <a href="#pricing" onclick="closeMenu()">Pricing</a>
         <a href="#contact" onclick="closeMenu()">Connect</a>
         <a href="#" class="btn" onclick="closeMenu(); openModal(); return false;">Apply for Coaching</a>
     </div>
@@ -1291,11 +1631,13 @@
             </div>
         </div>
         <div class="tagline-bar">
-            <span>EDUCATE</span>
+            <span>EDUCATION</span>
             <span class="dot"></span>
-            <span>ELEVATE</span>
+            <span>SUSTAINABILITY</span>
             <span class="dot"></span>
-            <span>EVOLVE</span>
+            <span>ACCOUNTABILITY</span>
+            <span class="dot"></span>
+            <span>PROGRESSION</span>
         </div>
     </section>
 
@@ -1306,16 +1648,19 @@
             <div class="accent-line"></div>
         </div>
         <div class="about-content">
-            <div class="about-text">
+            <div class="about-text bio-collapsible">
                 <p>
                     I am a Certified Level Master Trainer (CMT), Certified Personal Trainer (CPT), Certified Nutrition Specialist (CNS), and Certified Strength and Conditioning Coach, with over 20 years of hands-on experience coaching adults toward sustainable strength, performance, and body composition results.
                 </p>
-                <p>
-                    Over the years, I've worked with everyone from athletes and high performers to busy professionals and parents. I also work closely with individuals navigating injuries and movement restrictions, adjusting training to meet them where they are rather than forcing them into one-size-fits-all programs. As someone who has lived through many of the same challenges my clients face, I've learned that progress often comes from adapting and adjusting rather than forcing a lifestyle that could no longer be sustained. <strong>That perspective carries directly into how I coach and help my clients build systems that can be maintained long-term.</strong>
-                </p>
-                <p>
-                    My coaching emphasizes sustainable training, sound movement, practical nutrition, and long-term accountability, all built around the understanding that lasting progress isn't about chasing perfection, but about staying consistent long enough to see and feel real change — <strong>coaching built for real life, because that's where most people actually live.</strong>
-                </p>
+                <div class="bio-extra collapsed" id="bioExtra">
+                    <p>
+                        Over the years, I've worked with everyone from athletes and high performers to busy professionals and parents. I also work closely with individuals navigating injuries and movement restrictions, adjusting training to meet them where they are rather than forcing them into one-size-fits-all programs. As someone who has lived through many of the same challenges my clients face, I've learned that progress often comes from adapting and adjusting rather than forcing a lifestyle that could no longer be sustained. <strong>That perspective carries directly into how I coach and help my clients build systems that can be maintained long-term.</strong>
+                    </p>
+                    <p>
+                        My coaching emphasizes sustainable training, sound movement, practical nutrition, and long-term accountability, all built around the understanding that lasting progress isn't about chasing perfection, but about staying consistent long enough to see and feel real change — <strong>coaching built for real life, because that's where most people actually live.</strong>
+                    </p>
+                </div>
+                <button class="bio-toggle-btn" id="bioToggle" onclick="toggleBio()">Read Full Bio</button>
                 <div class="credentials">
                     <span class="credential-tag">CMT</span>
                     <span class="credential-tag">CPT</span>
@@ -1324,44 +1669,89 @@
                     <span class="credential-tag">20+ Years Experience</span>
                 </div>
             </div>
-            <div class="about-pillars">
-                <h3 style="font-size: 1.25rem; color: var(--white); margin-bottom: 1.5rem; text-align: center;">The Four-Pillar Philosophy</h3>
-                <div class="pillars-grid" style="grid-template-columns: repeat(2, 1fr);">
-                    <div class="pillar-card">
-                        <div class="pillar-icon">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        </div>
-                        <h3>Education</h3>
-                        <p>You don't just follow a plan — you understand it</p>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                        </div>
-                        <h3>Sustainability</h3>
-                        <p>Works on your worst weeks, not just your best</p>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <h3>Accountability</h3>
-                        <p>Structure and communication when motivation fades</p>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                        </div>
-                        <h3>Long-Term Progress</h3>
-                        <p>Get in shape — and stay in shape</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- How It Works Section -->
+    <!-- Four Pillars Standalone Section -->
     <div class="section-dark">
+        <section class="section" id="pillars">
+            <div class="section-header">
+                <h2 class="section-title">The Four Pillars</h2>
+                <div class="accent-line"></div>
+                <p class="section-subtitle">
+                    The foundation of every coaching plan — built to last.
+                </p>
+            </div>
+            <div class="pillars-section-grid">
+                <div class="pillar-standalone-card">
+                    <div class="pillar-standalone-header">
+                        <div class="pillar-icon-lg">
+                            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <h3>Education</h3>
+                    </div>
+                    <p class="pillar-tagline">You don't just follow a plan — you understand it.</p>
+                    <div class="pillar-expand-content" id="pillar-education">
+                        <p>Teaching the "why" behind the plan builds confidence, independence, and long-term success. The goal isn't reliance on a coach forever — it's giving you the knowledge to make informed decisions about your training and nutrition, so progress continues whether you're being coached or not.</p>
+                    </div>
+                    <button class="pillar-read-more" onclick="togglePillar('pillar-education', this)">
+                        Read More <span class="chevron">&#9660;</span>
+                    </button>
+                </div>
+
+                <div class="pillar-standalone-card">
+                    <div class="pillar-standalone-header">
+                        <div class="pillar-icon-lg">
+                            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        </div>
+                        <h3>Sustainability</h3>
+                    </div>
+                    <p class="pillar-tagline">Works on your worst weeks, not just your best.</p>
+                    <div class="pillar-expand-content" id="pillar-sustainability">
+                        <p>Every plan is designed around real schedules, stress levels, and responsibilities. No rigid rules or all-or-nothing approaches — just practical systems that allow consistency when life gets busy. Sustainability means building something you can actually maintain, not something that falls apart the moment things get hard.</p>
+                    </div>
+                    <button class="pillar-read-more" onclick="togglePillar('pillar-sustainability', this)">
+                        Read More <span class="chevron">&#9660;</span>
+                    </button>
+                </div>
+
+                <div class="pillar-standalone-card">
+                    <div class="pillar-standalone-header">
+                        <div class="pillar-icon-lg">
+                            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h3>Accountability</h3>
+                    </div>
+                    <p class="pillar-tagline">Structure and communication when motivation fades.</p>
+                    <div class="pillar-expand-content" id="pillar-accountability">
+                        <p>Accountability means structure, communication, and staying connected to the process. Consistent check-ins and ongoing adjustments keep you aligned with your goals. When motivation fades — and it will — accountability provides the direction and support to keep moving forward.</p>
+                    </div>
+                    <button class="pillar-read-more" onclick="togglePillar('pillar-accountability', this)">
+                        Read More <span class="chevron">&#9660;</span>
+                    </button>
+                </div>
+
+                <div class="pillar-standalone-card">
+                    <div class="pillar-standalone-header">
+                        <div class="pillar-icon-lg">
+                            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                        </div>
+                        <h3>Progression</h3>
+                    </div>
+                    <p class="pillar-tagline">Get in shape — and stay in shape.</p>
+                    <div class="pillar-expand-content" id="pillar-progression">
+                        <p>Progression is about building habits, skills, and systems that can be maintained for years — not just weeks. Progress is measured over time, with emphasis on growing stronger, more confident, and more capable. The goal isn't a quick transformation — it's lasting change.</p>
+                    </div>
+                    <button class="pillar-read-more" onclick="togglePillar('pillar-progression', this)">
+                        Read More <span class="chevron">&#9660;</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="section-dark" style="background: transparent;">
         <section class="section" id="how-it-works">
             <div class="section-header">
                 <h2 class="section-title">How Online Coaching Works</h2>
@@ -1479,6 +1869,75 @@
         </section>
     </div>
 
+    <!-- Pricing Section -->
+    <section class="section" id="pricing">
+        <div class="section-header">
+            <h2 class="section-title">Coaching Investment</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="pricing-card">
+            <div class="pricing-amount">$349</div>
+            <div class="pricing-period">per month</div>
+            <div class="pricing-commitment">Billed monthly — 12-month commitment</div>
+            <ul class="pricing-features">
+                <li>
+                    <span class="check">&#10003;</span>
+                    <span>Fully customized training & programming</span>
+                </li>
+                <li>
+                    <span class="check">&#10003;</span>
+                    <span>Personalized nutrition plan & guidance</span>
+                </li>
+                <li>
+                    <span class="check">&#10003;</span>
+                    <span>Weekly structured check-ins & adjustments</span>
+                </li>
+                <li>
+                    <span class="check">&#10003;</span>
+                    <span>Direct coach communication & support</span>
+                </li>
+                <li>
+                    <span class="check">&#10003;</span>
+                    <span>Ongoing program updates based on progress</span>
+                </li>
+            </ul>
+            <a href="#" class="btn" style="font-size: 1rem; padding: 1rem 2.5rem;" onclick="openModal(); return false;">Apply for Coaching</a>
+        </div>
+    </section>
+
+    <!-- Testimonials / Client Results Placeholder -->
+    <div class="section-dark">
+        <section class="section" id="results">
+            <div class="section-header">
+                <h2 class="section-title">Client Results</h2>
+                <div class="accent-line"></div>
+                <p class="section-subtitle">
+                    Real stories from real clients — coming soon.
+                </p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-placeholder-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
+                    </div>
+                    <p class="coming-soon">Coming Soon</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-placeholder-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
+                    </div>
+                    <p class="coming-soon">Coming Soon</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-placeholder-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
+                    </div>
+                    <p class="coming-soon">Coming Soon</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
     <!-- CTA Section -->
     <section class="cta-section" id="apply">
         <h2>Ready to Get Started?</h2>
@@ -1489,12 +1948,26 @@
     <!-- Footer -->
     <footer class="footer" id="contact">
         <div class="footer-content">
-            <div class="footer-logo">
-                <span class="logo-dan">DAN</span> SCOTT
-                <span class="logo-fitness">FITNESS</span>
+            <div>
+                <div class="footer-logo">
+                    <span class="logo-dan">DAN</span> SCOTT
+                    <span class="logo-fitness">FITNESS</span>
+                </div>
+                <div class="footer-tagline">
+                    EDUCATION &bull; SUSTAINABILITY &bull; ACCOUNTABILITY &bull; PROGRESSION
+                </div>
             </div>
-            <div class="footer-tagline">
-                EDUCATE • ELEVATE • EVOLVE
+            <div class="footer-col">
+                <h4>Navigate</h4>
+                <a href="#about">About Dan</a>
+                <a href="#pillars">The Four Pillars</a>
+                <a href="#how-it-works">How Coaching Works</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#results">Client Results</a>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <a href="#" onclick="openModal(); return false;">Apply for Coaching</a>
             </div>
             <div class="footer-copy">
                 &copy; 2026 Dan Scott Fitness. All rights reserved.
@@ -1512,7 +1985,11 @@
             <div class="modal-body">
                 <p class="modal-intro">Please complete this form as thoroughly and honestly as possible. Your answers are used to build your training and nutrition plan and guide your coaching.</p>
 
-                <form id="onboardingForm" action="#" method="POST">
+                <form id="onboardingForm" action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="76e9fac2-a27a-4f26-88a2-e1d7fa6933cd">
+                    <input type="hidden" name="subject" value="New Coaching Application - Dan Scott Fitness">
+                    <input type="hidden" name="from_name" value="Dan Scott Fitness Website">
+                    <input type="checkbox" name="botcheck" class="hidden" style="display:none">
                     <!-- Basic Information -->
                     <div class="form-section">
                         <h3 class="form-section-title">Basic Information</h3>
@@ -1806,6 +2283,16 @@
                         <button type="submit" class="btn">Submit Application</button>
                     </div>
                 </form>
+
+                <!-- Thank You State -->
+                <div class="thank-you-state" id="thankYouState">
+                    <div class="thank-you-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h3>Application Received</h3>
+                    <p>Thank you for your interest in coaching. Your application has been submitted and you'll hear back soon.</p>
+                    <button class="btn" onclick="closeModal()">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1822,9 +2309,43 @@
             document.getElementById('mobileNav').classList.remove('open');
         }
 
+        // Bio collapsible toggle (mobile only)
+        function toggleBio() {
+            var extra = document.getElementById('bioExtra');
+            var btn = document.getElementById('bioToggle');
+            if (extra.classList.contains('collapsed')) {
+                extra.classList.remove('collapsed');
+                extra.classList.add('expanded');
+                btn.textContent = 'Show Less';
+            } else {
+                extra.classList.remove('expanded');
+                extra.classList.add('collapsed');
+                btn.textContent = 'Read Full Bio';
+            }
+        }
+
+        // Pillar expand/collapse
+        function togglePillar(id, btn) {
+            var content = document.getElementById(id);
+            var isExpanded = content.classList.contains('expanded');
+            if (isExpanded) {
+                content.classList.remove('expanded');
+                btn.classList.remove('active');
+            } else {
+                content.classList.add('expanded');
+                btn.classList.add('active');
+            }
+        }
+
         // Modal functions
         function openModal() {
-            document.getElementById('applicationModal').classList.add('open');
+            var modal = document.getElementById('applicationModal');
+            var form = document.getElementById('onboardingForm');
+            var thankYou = document.getElementById('thankYouState');
+            // Reset to form view when opening
+            form.style.display = 'block';
+            thankYou.classList.remove('active');
+            modal.classList.add('open');
             document.body.classList.add('body-no-scroll');
         }
 
@@ -1847,9 +2368,67 @@
             }
         });
 
+        // Form submission handler
+        document.getElementById('onboardingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Basic validation highlighting
+            var requiredFields = this.querySelectorAll('[required]');
+            var valid = true;
+            requiredFields.forEach(function(field) {
+                field.classList.remove('error');
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    valid = false;
+                }
+            });
+
+            if (!valid) {
+                var firstError = this.querySelector('.error');
+                if (firstError) firstError.focus();
+                return;
+            }
+
+            // Submit via Web3Forms
+            var form = this;
+            var thankYou = document.getElementById('thankYouState');
+            var submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            var formData = new FormData(form);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            }).then(function(res) {
+                return res.json();
+            }).then(function(data) {
+                if (data.success) {
+                    form.style.display = 'none';
+                    thankYou.classList.add('active');
+                    document.querySelector('.modal-body').scrollTop = 0;
+                    document.querySelector('.modal-overlay').scrollTop = 0;
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Application';
+                }
+            }).catch(function() {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application';
+            });
+        });
+
+        // Clear error styling on input
+        document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(function(el) {
+            el.addEventListener('input', function() {
+                this.classList.remove('error');
+            });
+        });
+
         // Navbar background on scroll - Glass UI
         window.addEventListener('scroll', function() {
-            const nav = document.getElementById('nav');
+            var nav = document.getElementById('nav');
             if (window.scrollY > 50) {
                 nav.style.background = 'rgba(255, 255, 255, 0.15)';
                 nav.style.borderColor = 'rgba(255, 255, 255, 0.3)';
@@ -1862,10 +2441,10 @@
         });
 
         // Smooth scroll for anchor links (exclude modal triggers)
-        document.querySelectorAll('a[href^="#"]:not([onclick])').forEach(anchor => {
+        document.querySelectorAll('a[href^="#"]:not([onclick])').forEach(function(anchor) {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                var target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',

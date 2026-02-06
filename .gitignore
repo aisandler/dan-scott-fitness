@@ -12,3 +12,4 @@
 .claude/
 
 # Large image archives (keep individual images)
+.vercel

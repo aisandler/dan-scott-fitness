@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dan Scott Fitness - Layout Playground</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0d0d0d;
+            --surface: #1a1a1a;
+            --surface-2: #252525;
+            --border: #333;
+            --text: #e5e5e5;
+            --text-muted: #888;
+            --accent: #E87A2E;
+            --accent-muted: rgba(232, 122, 46, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .playground {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            grid-template-rows: 1fr auto;
+            min-height: 100vh;
+        }
+
+        /* Controls Panel */
+        .controls {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .controls h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .controls-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preset-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .preset-btn:hover {
+            background: var(--accent-muted);
+            border-color: var(--accent);
+        }
+
+        .preset-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .control-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .control-section-title::before {
+            content: '▼';
+            font-size: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .control-section.collapsed .control-section-title::before {
+            transform: rotate(-90deg);
+        }
+
+        .control-section.collapsed .control-section-content {
+            display: none;
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text);
+            margin-bottom: 0.35rem;
+        }
+
+        .control-value {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            background: var(--surface-2);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--surface-2);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        select {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .toggle-label {
+            font-size: 0.75rem;
+        }
+
+        .toggle {
+            width: 36px;
+            height: 20px;
+            background: var(--surface-2);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle.active {
+            background: var(--accent);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .toggle.active::after {
+            transform: translateX(16px);
+        }
+
+        /* Preview Panel */
+        .preview-container {
+            background: #0a0a0a;
+            padding: 1.5rem;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .preview-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .viewport-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .viewport-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.35rem 0.65rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .viewport-btn.active {
+            background: var(--accent-muted);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .preview-frame {
+            flex: 1;
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: max-width 0.3s ease;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .preview-frame.mobile {
+            max-width: 375px;
+        }
+
+        .preview-frame.tablet {
+            max-width: 768px;
+        }
+
+        .preview-frame.desktop {
+            max-width: 100%;
+        }
+
+        .preview-content {
+            height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Preview Site Styles */
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .site-logo {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .site-logo .dan {
+            color: var(--accent);
+        }
+
+        .site-nav-links {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.75rem;
+        }
+
+        .site-nav-links span {
+            opacity: 0.7;
+        }
+
+        .nav-cta {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .site-hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(13,13,13,0.3) 0%, rgba(13,13,13,0.7) 50%, rgba(13,13,13,0.95) 75%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            display: flex;
+        }
+
+        .hero-text {
+            text-align: center;
+        }
+
+        .hero-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .hero-title .dan {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 0.4em;
+            opacity: 0.6;
+        }
+
+        .hero-desc {
+            opacity: 0.85;
+            line-height: 1.7;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .site-section {
+            transition: padding 0.3s ease;
+        }
+
+        .section-header {
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .accent-line {
+            height: 3px;
+            background: var(--accent);
+            margin: 1rem auto;
+        }
+
+        .pillars-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .pillar-card {
+            padding: 1.25rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .pillar-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin: 0 auto 0.75rem;
+        }
+
+        .pillar-card h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pillar-card p {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .steps-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .step-card {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .step-card h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-card p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Prompt Output */
+        .prompt-output {
+            grid-column: 1 / -1;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 1.25rem;
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .prompt-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .copy-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+        }
+
+        .prompt-text {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        /* Import Oswald for preview */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body>
+    <div class="playground">
+        <!-- Controls Panel -->
+        <div class="controls">
+            <h1>Layout Playground</h1>
+            <p class="controls-subtitle">Dan Scott Fitness — adjust layout, spacing, and structure</p>
+
+            <div class="presets">
+                <button class="preset-btn active" onclick="applyPreset('current')">Current</button>
+                <button class="preset-btn" onclick="applyPreset('compact')">Compact</button>
+                <button class="preset-btn" onclick="applyPreset('spacious')">Spacious</button>
+                <button class="preset-btn" onclick="applyPreset('bold')">Bold</button>
+                <button class="preset-btn" onclick="applyPreset('minimal')">Minimal</button>
+            </div>
+
+            <!-- Hero Section -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Hero Section</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Hero Height</span>
+                            <span class="control-value" id="heroHeightValue">100vh</span>
+                        </div>
+                        <input type="range" id="heroHeight" min="60" max="100" value="100" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Content Width</span>
+                            <span class="control-value" id="heroContentWidthValue">550px</span>
+                        </div>
+                        <input type="range" id="heroContentWidth" min="400" max="700" value="550" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Content Position</span>
+                        </div>
+                        <select id="heroPosition" onchange="updateState()">
+                            <option value="flex-end">Right (Current)</option>
+                            <option value="center">Center</option>
+                            <option value="flex-start">Left</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Title Size</span>
+                            <span class="control-value" id="heroTitleSizeValue">3.5rem</span>
+                        </div>
+                        <input type="range" id="heroTitleSize" min="2" max="6" step="0.25" value="3.5" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Description Size</span>
+                            <span class="control-value" id="heroDescSizeValue">1rem</span>
+                        </div>
+                        <input type="range" id="heroDescSize" min="0.875" max="1.5" step="0.125" value="1" oninput="updateState()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Spacing -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Section Spacing</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Section Padding (Vertical)</span>
+                            <span class="control-value" id="sectionPaddingValue">6rem</span>
+                        </div>
+                        <input type="range" id="sectionPadding" min="3" max="10" step="0.5" value="6" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Section Padding (Horizontal)</span>
+                            <span class="control-value" id="sectionPaddingHValue">2rem</span>
+                        </div>
+                        <input type="range" id="sectionPaddingH" min="1" max="4" step="0.5" value="2" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Max Content Width</span>
+                            <span class="control-value" id="maxWidthValue">1200px</span>
+                        </div>
+                        <input type="range" id="maxWidth" min="900" max="1400" step="50" value="1200" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Section Title Size</span>
+                            <span class="control-value" id="sectionTitleSizeValue">2rem</span>
+                        </div>
+                        <input type="range" id="sectionTitleSize" min="1.5" max="3" step="0.125" value="2" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Accent Line Width</span>
+                            <span class="control-value" id="accentLineWidthValue">60px</span>
+                        </div>
+                        <input type="range" id="accentLineWidth" min="40" max="120" step="10" value="60" oninput="updateState()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Layouts -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Grid Layouts</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Pillars Grid Columns</span>
+                        </div>
+                        <select id="pillarsColumns" onchange="updateState()">
+                            <option value="2">2 Columns</option>
+                            <option value="4">4 Columns (Current)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Steps Grid Columns</span>
+                        </div>
+                        <select id="stepsColumns" onchange="updateState()">
+                            <option value="1">1 Column (Stacked)</option>
+                            <option value="3">3 Columns (Current)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Grid Gap</span>
+                            <span class="control-value" id="gridGapValue">2rem</span>
+                        </div>
+                        <input type="range" id="gridGap" min="1" max="4" step="0.5" value="2" oninput="updateState()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Cards</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Card Padding</span>
+                            <span class="control-value" id="cardPaddingValue">2rem</span>
+                        </div>
+                        <input type="range" id="cardPadding" min="1" max="3" step="0.25" value="2" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Card Border Radius</span>
+                            <span class="control-value" id="cardRadiusValue">16px</span>
+                        </div>
+                        <input type="range" id="cardRadius" min="8" max="24" step="2" value="16" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Glass Background Opacity</span>
+                            <span class="control-value" id="glassOpacityValue">10%</span>
+                        </div>
+                        <input type="range" id="glassOpacity" min="5" max="25" step="1" value="10" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Glass Blur</span>
+                            <span class="control-value" id="glassBlurValue">20px</span>
+                        </div>
+                        <input type="range" id="glassBlur" min="8" max="40" step="2" value="20" oninput="updateState()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Navigation</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Nav Padding</span>
+                            <span class="control-value" id="navPaddingValue">1rem</span>
+                        </div>
+                        <input type="range" id="navPadding" min="0.5" max="2" step="0.25" value="1" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Nav Link Gap</span>
+                            <span class="control-value" id="navLinkGapValue">2rem</span>
+                        </div>
+                        <input type="range" id="navLinkGap" min="1" max="4" step="0.5" value="2" oninput="updateState()">
+                    </div>
+
+                    <div class="toggle-row">
+                        <span class="toggle-label">Sticky Navigation</span>
+                        <div class="toggle active" id="stickyNav" onclick="toggleToggle(this)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Buttons</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Button Padding (Vertical)</span>
+                            <span class="control-value" id="btnPaddingVValue">0.75rem</span>
+                        </div>
+                        <input type="range" id="btnPaddingV" min="0.5" max="1.25" step="0.125" value="0.75" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Button Padding (Horizontal)</span>
+                            <span class="control-value" id="btnPaddingHValue">1.5rem</span>
+                        </div>
+                        <input type="range" id="btnPaddingH" min="1" max="3" step="0.25" value="1.5" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Button Border Radius</span>
+                            <span class="control-value" id="btnRadiusValue">16px</span>
+                        </div>
+                        <input type="range" id="btnRadius" min="4" max="24" step="2" value="16" oninput="updateState()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typography -->
+            <div class="control-section">
+                <div class="control-section-title" onclick="toggleSection(this)">Typography</div>
+                <div class="control-section-content">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Body Font Size</span>
+                            <span class="control-value" id="bodyFontSizeValue">1rem</span>
+                        </div>
+                        <input type="range" id="bodyFontSize" min="0.875" max="1.25" step="0.0625" value="1" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Line Height</span>
+                            <span class="control-value" id="lineHeightValue">1.6</span>
+                        </div>
+                        <input type="range" id="lineHeight" min="1.4" max="2" step="0.1" value="1.6" oninput="updateState()">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Heading Letter Spacing</span>
+                            <span class="control-value" id="letterSpacingValue">0.05em</span>
+                        </div>
+                        <input type="range" id="letterSpacing" min="0" max="0.15" step="0.01" value="0.05" oninput="updateState()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-container">
+            <div class="preview-header">
+                <span class="preview-title">Live Preview</span>
+                <div class="viewport-selector">
+                    <button class="viewport-btn" onclick="setViewport('mobile')">Mobile</button>
+                    <button class="viewport-btn" onclick="setViewport('tablet')">Tablet</button>
+                    <button class="viewport-btn active" onclick="setViewport('desktop')">Desktop</button>
+                </div>
+            </div>
+
+            <div class="preview-frame desktop" id="previewFrame">
+                <div class="preview-content" id="preview">
+                    <!-- Preview content rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt Output -->
+        <div class="prompt-output">
+            <div class="prompt-header">
+                <span class="prompt-title">Generated Prompt</span>
+                <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+            </div>
+            <div class="prompt-text" id="promptText">
+                Adjust controls to generate layout changes...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default state matching current website
+        const DEFAULTS = {
+            heroHeight: 100,
+            heroContentWidth: 550,
+            heroPosition: 'flex-end',
+            heroTitleSize: 3.5,
+            heroDescSize: 1,
+            sectionPadding: 6,
+            sectionPaddingH: 2,
+            maxWidth: 1200,
+            sectionTitleSize: 2,
+            accentLineWidth: 60,
+            pillarsColumns: '4',
+            stepsColumns: '3',
+            gridGap: 2,
+            cardPadding: 2,
+            cardRadius: 16,
+            glassOpacity: 10,
+            glassBlur: 20,
+            navPadding: 1,
+            navLinkGap: 2,
+            stickyNav: true,
+            btnPaddingV: 0.75,
+            btnPaddingH: 1.5,
+            btnRadius: 16,
+            bodyFontSize: 1,
+            lineHeight: 1.6,
+            letterSpacing: 0.05
+        };
+
+        const PRESETS = {
+            current: { ...DEFAULTS },
+            compact: {
+                ...DEFAULTS,
+                heroHeight: 80,
+                heroTitleSize: 3,
+                sectionPadding: 4,
+                gridGap: 1.5,
+                cardPadding: 1.5,
+                cardRadius: 12,
+                navPadding: 0.75,
+                btnPaddingV: 0.5,
+                btnPaddingH: 1.25
+            },
+            spacious: {
+                ...DEFAULTS,
+                heroHeight: 100,
+                heroTitleSize: 4,
+                heroDescSize: 1.125,
+                sectionPadding: 8,
+                gridGap: 3,
+                cardPadding: 2.5,
+                cardRadius: 20,
+                navPadding: 1.5,
+                navLinkGap: 3,
+                lineHeight: 1.8
+            },
+            bold: {
+                ...DEFAULTS,
+                heroTitleSize: 5,
+                heroContentWidth: 600,
+                sectionTitleSize: 2.5,
+                accentLineWidth: 100,
+                cardRadius: 8,
+                btnRadius: 8,
+                letterSpacing: 0.08,
+                glassOpacity: 15
+            },
+            minimal: {
+                ...DEFAULTS,
+                heroHeight: 85,
+                heroTitleSize: 3,
+                heroDescSize: 0.9375,
+                sectionPadding: 5,
+                sectionTitleSize: 1.75,
+                accentLineWidth: 40,
+                gridGap: 1.5,
+                cardPadding: 1.5,
+                cardRadius: 12,
+                glassOpacity: 8,
+                glassBlur: 12,
+                btnRadius: 8,
+                navLinkGap: 1.5
+            }
+        };
+
+        let state = { ...DEFAULTS };
+        let currentPreset = 'current';
+        let currentViewport = 'desktop';
+
+        function updateState() {
+            // Read all control values
+            state.heroHeight = parseFloat(document.getElementById('heroHeight').value);
+            state.heroContentWidth = parseFloat(document.getElementById('heroContentWidth').value);
+            state.heroPosition = document.getElementById('heroPosition').value;
+            state.heroTitleSize = parseFloat(document.getElementById('heroTitleSize').value);
+            state.heroDescSize = parseFloat(document.getElementById('heroDescSize').value);
+            state.sectionPadding = parseFloat(document.getElementById('sectionPadding').value);
+            state.sectionPaddingH = parseFloat(document.getElementById('sectionPaddingH').value);
+            state.maxWidth = parseFloat(document.getElementById('maxWidth').value);
+            state.sectionTitleSize = parseFloat(document.getElementById('sectionTitleSize').value);
+            state.accentLineWidth = parseFloat(document.getElementById('accentLineWidth').value);
+            state.pillarsColumns = document.getElementById('pillarsColumns').value;
+            state.stepsColumns = document.getElementById('stepsColumns').value;
+            state.gridGap = parseFloat(document.getElementById('gridGap').value);
+            state.cardPadding = parseFloat(document.getElementById('cardPadding').value);
+            state.cardRadius = parseFloat(document.getElementById('cardRadius').value);
+            state.glassOpacity = parseFloat(document.getElementById('glassOpacity').value);
+            state.glassBlur = parseFloat(document.getElementById('glassBlur').value);
+            state.navPadding = parseFloat(document.getElementById('navPadding').value);
+            state.navLinkGap = parseFloat(document.getElementById('navLinkGap').value);
+            state.stickyNav = document.getElementById('stickyNav').classList.contains('active');
+            state.btnPaddingV = parseFloat(document.getElementById('btnPaddingV').value);
+            state.btnPaddingH = parseFloat(document.getElementById('btnPaddingH').value);
+            state.btnRadius = parseFloat(document.getElementById('btnRadius').value);
+            state.bodyFontSize = parseFloat(document.getElementById('bodyFontSize').value);
+            state.lineHeight = parseFloat(document.getElementById('lineHeight').value);
+            state.letterSpacing = parseFloat(document.getElementById('letterSpacing').value);
+
+            // Update value displays
+            document.getElementById('heroHeightValue').textContent = state.heroHeight + 'vh';
+            document.getElementById('heroContentWidthValue').textContent = state.heroContentWidth + 'px';
+            document.getElementById('heroTitleSizeValue').textContent = state.heroTitleSize + 'rem';
+            document.getElementById('heroDescSizeValue').textContent = state.heroDescSize + 'rem';
+            document.getElementById('sectionPaddingValue').textContent = state.sectionPadding + 'rem';
+            document.getElementById('sectionPaddingHValue').textContent = state.sectionPaddingH + 'rem';
+            document.getElementById('maxWidthValue').textContent = state.maxWidth + 'px';
+            document.getElementById('sectionTitleSizeValue').textContent = state.sectionTitleSize + 'rem';
+            document.getElementById('accentLineWidthValue').textContent = state.accentLineWidth + 'px';
+            document.getElementById('gridGapValue').textContent = state.gridGap + 'rem';
+            document.getElementById('cardPaddingValue').textContent = state.cardPadding + 'rem';
+            document.getElementById('cardRadiusValue').textContent = state.cardRadius + 'px';
+            document.getElementById('glassOpacityValue').textContent = state.glassOpacity + '%';
+            document.getElementById('glassBlurValue').textContent = state.glassBlur + 'px';
+            document.getElementById('navPaddingValue').textContent = state.navPadding + 'rem';
+            document.getElementById('navLinkGapValue').textContent = state.navLinkGap + 'rem';
+            document.getElementById('btnPaddingVValue').textContent = state.btnPaddingV + 'rem';
+            document.getElementById('btnPaddingHValue').textContent = state.btnPaddingH + 'rem';
+            document.getElementById('btnRadiusValue').textContent = state.btnRadius + 'px';
+            document.getElementById('bodyFontSizeValue').textContent = state.bodyFontSize + 'rem';
+            document.getElementById('lineHeightValue').textContent = state.lineHeight;
+            document.getElementById('letterSpacingValue').textContent = state.letterSpacing + 'em';
+
+            // Check if we match a preset
+            updatePresetButtons();
+
+            renderPreview();
+            updatePrompt();
+        }
+
+        function updatePresetButtons() {
+            const presetBtns = document.querySelectorAll('.preset-btn');
+            presetBtns.forEach(btn => btn.classList.remove('active'));
+
+            for (const [name, preset] of Object.entries(PRESETS)) {
+                if (statesMatch(state, preset)) {
+                    currentPreset = name;
+                    document.querySelector(`.preset-btn[onclick="applyPreset('${name}')"]`).classList.add('active');
+                    return;
+                }
+            }
+            currentPreset = null;
+        }
+
+        function statesMatch(a, b) {
+            for (const key of Object.keys(DEFAULTS)) {
+                if (a[key] !== b[key]) return false;
+            }
+            return true;
+        }
+
+        function applyPreset(name) {
+            const preset = PRESETS[name];
+            if (!preset) return;
+
+            state = { ...preset };
+            currentPreset = name;
+
+            // Update all controls
+            document.getElementById('heroHeight').value = state.heroHeight;
+            document.getElementById('heroContentWidth').value = state.heroContentWidth;
+            document.getElementById('heroPosition').value = state.heroPosition;
+            document.getElementById('heroTitleSize').value = state.heroTitleSize;
+            document.getElementById('heroDescSize').value = state.heroDescSize;
+            document.getElementById('sectionPadding').value = state.sectionPadding;
+            document.getElementById('sectionPaddingH').value = state.sectionPaddingH;
+            document.getElementById('maxWidth').value = state.maxWidth;
+            document.getElementById('sectionTitleSize').value = state.sectionTitleSize;
+            document.getElementById('accentLineWidth').value = state.accentLineWidth;
+            document.getElementById('pillarsColumns').value = state.pillarsColumns;
+            document.getElementById('stepsColumns').value = state.stepsColumns;
+            document.getElementById('gridGap').value = state.gridGap;
+            document.getElementById('cardPadding').value = state.cardPadding;
+            document.getElementById('cardRadius').value = state.cardRadius;
+            document.getElementById('glassOpacity').value = state.glassOpacity;
+            document.getElementById('glassBlur').value = state.glassBlur;
+            document.getElementById('navPadding').value = state.navPadding;
+            document.getElementById('navLinkGap').value = state.navLinkGap;
+            document.getElementById('stickyNav').classList.toggle('active', state.stickyNav);
+            document.getElementById('btnPaddingV').value = state.btnPaddingV;
+            document.getElementById('btnPaddingH').value = state.btnPaddingH;
+            document.getElementById('btnRadius').value = state.btnRadius;
+            document.getElementById('bodyFontSize').value = state.bodyFontSize;
+            document.getElementById('lineHeight').value = state.lineHeight;
+            document.getElementById('letterSpacing').value = state.letterSpacing;
+
+            // Update preset buttons
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.preset-btn[onclick="applyPreset('${name}')"]`).classList.add('active');
+
+            updateState();
+        }
+
+        function toggleSection(titleEl) {
+            titleEl.parentElement.classList.toggle('collapsed');
+        }
+
+        function toggleToggle(el) {
+            el.classList.toggle('active');
+            updateState();
+        }
+
+        function setViewport(viewport) {
+            currentViewport = viewport;
+            const frame = document.getElementById('previewFrame');
+            frame.classList.remove('mobile', 'tablet', 'desktop');
+            frame.classList.add(viewport);
+
+            document.querySelectorAll('.viewport-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.viewport-btn[onclick="setViewport('${viewport}')"]`).classList.add('active');
+        }
+
+        function renderPreview() {
+            const preview = document.getElementById('preview');
+            const glassBg = `rgba(255, 255, 255, ${state.glassOpacity / 100})`;
+            const glassBorder = `rgba(255, 255, 255, ${(state.glassOpacity + 10) / 100})`;
+
+            preview.innerHTML = `
+                <div style="background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%); font-size: ${state.bodyFontSize}rem; line-height: ${state.lineHeight};">
+                    <!-- Navigation -->
+                    <nav class="site-nav" style="
+                        padding: ${state.navPadding}rem ${state.sectionPaddingH}rem;
+                        background: ${glassBg};
+                        backdrop-filter: blur(${state.glassBlur}px);
+                        border-bottom: 1px solid ${glassBorder};
+                        ${state.stickyNav ? 'position: sticky; top: 0;' : ''}
+                    ">
+                        <div class="site-logo">
+                            <span class="dan">DAN</span> SCOTT
+                        </div>
+                        <div class="site-nav-links" style="gap: ${state.navLinkGap}rem;">
+                            <span>Bio</span>
+                            <span>How It Works</span>
+                            <span class="nav-cta" style="
+                                background: #E87A2E;
+                                color: white;
+                                border-radius: ${state.btnRadius}px;
+                                padding: ${state.btnPaddingV}rem ${state.btnPaddingH}rem;
+                            ">Apply</span>
+                        </div>
+                    </nav>
+
+                    <!-- Hero -->
+                    <section class="site-hero" style="min-height: ${state.heroHeight * 0.6}vh;">
+                        <div class="hero-bg"></div>
+                        <div class="hero-content" style="
+                            padding: 3rem ${state.sectionPaddingH}rem;
+                            max-width: ${state.maxWidth}px;
+                            margin: 0 auto;
+                            justify-content: ${state.heroPosition};
+                        ">
+                            <div class="hero-text" style="max-width: ${state.heroContentWidth}px;">
+                                <h1 class="hero-title" style="
+                                    font-size: ${state.heroTitleSize}rem;
+                                    letter-spacing: ${state.letterSpacing}em;
+                                ">
+                                    <span class="dan">DAN</span> SCOTT
+                                </h1>
+                                <p class="hero-subtitle" style="font-size: ${state.heroDescSize * 0.9}rem; margin: 0.5rem 0 1rem;">
+                                    F I T N E S S
+                                </p>
+                                <p class="hero-desc" style="font-size: ${state.heroDescSize}rem; margin-bottom: 1.5rem;">
+                                    Structured, evidence-based training and nutrition coaching for busy adults.
+                                </p>
+                                <a class="hero-btn" style="
+                                    background: #E87A2E;
+                                    color: white;
+                                    border-radius: ${state.btnRadius}px;
+                                    padding: ${state.btnPaddingV}rem ${state.btnPaddingH}rem;
+                                ">Apply for Coaching</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- About Section -->
+                    <section class="site-section" style="
+                        padding: ${state.sectionPadding}rem ${state.sectionPaddingH}rem;
+                        max-width: ${state.maxWidth}px;
+                        margin: 0 auto;
+                    ">
+                        <div class="section-header">
+                            <h2 class="section-title" style="
+                                font-size: ${state.sectionTitleSize}rem;
+                                letter-spacing: ${state.letterSpacing}em;
+                            ">The Four-Pillar Philosophy</h2>
+                            <div class="accent-line" style="width: ${state.accentLineWidth}px;"></div>
+                        </div>
+                        <div class="pillars-grid" style="
+                            grid-template-columns: repeat(${state.pillarsColumns}, 1fr);
+                            gap: ${state.gridGap}rem;
+                            margin-top: 2rem;
+                        ">
+                            ${['Education', 'Sustainability', 'Accountability', 'Long-Term Progress'].map(name => `
+                                <div class="pillar-card" style="
+                                    background: ${glassBg};
+                                    backdrop-filter: blur(${state.glassBlur}px);
+                                    border: 1px solid ${glassBorder};
+                                    border-radius: ${state.cardRadius}px;
+                                    padding: ${state.cardPadding}rem;
+                                ">
+                                    <div class="pillar-icon"></div>
+                                    <h4 style="letter-spacing: ${state.letterSpacing}em;">${name}</h4>
+                                    <p>Supporting text here</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+
+                    <!-- How It Works Section -->
+                    <section class="site-section" style="
+                        padding: ${state.sectionPadding}rem ${state.sectionPaddingH}rem;
+                        max-width: ${state.maxWidth}px;
+                        margin: 0 auto;
+                        background: linear-gradient(180deg, rgba(26, 26, 26, 0.9) 0%, rgba(13, 13, 13, 0.95) 100%);
+                    ">
+                        <div class="section-header">
+                            <h2 class="section-title" style="
+                                font-size: ${state.sectionTitleSize}rem;
+                                letter-spacing: ${state.letterSpacing}em;
+                            ">How Online Coaching Works</h2>
+                            <div class="accent-line" style="width: ${state.accentLineWidth}px;"></div>
+                        </div>
+                        <div class="steps-grid" style="
+                            grid-template-columns: repeat(${state.stepsColumns}, 1fr);
+                            gap: ${state.gridGap}rem;
+                            margin-top: 2rem;
+                        ">
+                            ${['Apply', 'Initial Call', 'Start Training'].map((name, i) => `
+                                <div class="step-card">
+                                    <div class="step-number">${i + 1}</div>
+                                    <h4 style="letter-spacing: ${state.letterSpacing}em;">${name}</h4>
+                                    <p>Description of step ${i + 1} goes here with details.</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                </div>
+            `;
+        }
+
+        function updatePrompt() {
+            const changes = [];
+            const cssChanges = [];
+
+            // Hero changes
+            if (state.heroHeight !== DEFAULTS.heroHeight) {
+                changes.push(`hero section height to ${state.heroHeight}vh`);
+                cssChanges.push(`.hero { min-height: ${state.heroHeight}vh; }`);
+            }
+            if (state.heroContentWidth !== DEFAULTS.heroContentWidth) {
+                changes.push(`hero content width to ${state.heroContentWidth}px`);
+                cssChanges.push(`.hero-text { max-width: ${state.heroContentWidth}px; }`);
+            }
+            if (state.heroPosition !== DEFAULTS.heroPosition) {
+                const posName = state.heroPosition === 'center' ? 'center' : state.heroPosition === 'flex-start' ? 'left' : 'right';
+                changes.push(`hero content position to ${posName}`);
+                cssChanges.push(`.hero-content { justify-content: ${state.heroPosition}; }`);
+            }
+            if (state.heroTitleSize !== DEFAULTS.heroTitleSize) {
+                changes.push(`hero title size to ${state.heroTitleSize}rem`);
+                cssChanges.push(`.hero-title { font-size: ${state.heroTitleSize}rem; }`);
+            }
+            if (state.heroDescSize !== DEFAULTS.heroDescSize) {
+                changes.push(`hero description size to ${state.heroDescSize}rem`);
+                cssChanges.push(`.hero-description { font-size: ${state.heroDescSize}rem; }`);
+            }
+
+            // Section changes
+            if (state.sectionPadding !== DEFAULTS.sectionPadding) {
+                changes.push(`section vertical padding to ${state.sectionPadding}rem`);
+                cssChanges.push(`.section { padding-top: ${state.sectionPadding}rem; padding-bottom: ${state.sectionPadding}rem; }`);
+            }
+            if (state.sectionPaddingH !== DEFAULTS.sectionPaddingH) {
+                changes.push(`section horizontal padding to ${state.sectionPaddingH}rem`);
+                cssChanges.push(`.section { padding-left: ${state.sectionPaddingH}rem; padding-right: ${state.sectionPaddingH}rem; }`);
+            }
+            if (state.maxWidth !== DEFAULTS.maxWidth) {
+                changes.push(`max content width to ${state.maxWidth}px`);
+                cssChanges.push(`.section { max-width: ${state.maxWidth}px; }`);
+            }
+            if (state.sectionTitleSize !== DEFAULTS.sectionTitleSize) {
+                changes.push(`section title size to ${state.sectionTitleSize}rem`);
+                cssChanges.push(`.section-title { font-size: ${state.sectionTitleSize}rem; }`);
+            }
+            if (state.accentLineWidth !== DEFAULTS.accentLineWidth) {
+                changes.push(`accent line width to ${state.accentLineWidth}px`);
+                cssChanges.push(`.accent-line { width: ${state.accentLineWidth}px; }`);
+            }
+
+            // Grid changes
+            if (state.pillarsColumns !== DEFAULTS.pillarsColumns) {
+                changes.push(`pillars grid to ${state.pillarsColumns} columns`);
+                cssChanges.push(`.pillars-grid { grid-template-columns: repeat(${state.pillarsColumns}, 1fr); }`);
+            }
+            if (state.stepsColumns !== DEFAULTS.stepsColumns) {
+                changes.push(`steps grid to ${state.stepsColumns} column${state.stepsColumns === '1' ? '' : 's'}`);
+                cssChanges.push(`.steps-container { grid-template-columns: repeat(${state.stepsColumns}, 1fr); }`);
+            }
+            if (state.gridGap !== DEFAULTS.gridGap) {
+                changes.push(`grid gaps to ${state.gridGap}rem`);
+                cssChanges.push(`.pillars-grid, .steps-container, .included-grid { gap: ${state.gridGap}rem; }`);
+            }
+
+            // Card changes
+            if (state.cardPadding !== DEFAULTS.cardPadding) {
+                changes.push(`card padding to ${state.cardPadding}rem`);
+                cssChanges.push(`.pillar-card, .included-card, .comparison-card { padding: ${state.cardPadding}rem; }`);
+            }
+            if (state.cardRadius !== DEFAULTS.cardRadius) {
+                changes.push(`card border radius to ${state.cardRadius}px`);
+                cssChanges.push(`--glass-radius: ${state.cardRadius}px; --glass-radius-lg: ${state.cardRadius + 4}px;`);
+            }
+            if (state.glassOpacity !== DEFAULTS.glassOpacity) {
+                changes.push(`glass background opacity to ${state.glassOpacity}%`);
+                cssChanges.push(`--glass-frosted-bg: rgba(255, 255, 255, ${state.glassOpacity / 100});`);
+            }
+            if (state.glassBlur !== DEFAULTS.glassBlur) {
+                changes.push(`glass blur to ${state.glassBlur}px`);
+                cssChanges.push(`--glass-frosted-blur: ${state.glassBlur}px;`);
+            }
+
+            // Nav changes
+            if (state.navPadding !== DEFAULTS.navPadding) {
+                changes.push(`navigation padding to ${state.navPadding}rem`);
+                cssChanges.push(`.nav { padding: ${state.navPadding}rem 2rem; }`);
+            }
+            if (state.navLinkGap !== DEFAULTS.navLinkGap) {
+                changes.push(`navigation link gap to ${state.navLinkGap}rem`);
+                cssChanges.push(`.nav-links { gap: ${state.navLinkGap}rem; }`);
+            }
+            if (state.stickyNav !== DEFAULTS.stickyNav) {
+                changes.push(`navigation to ${state.stickyNav ? 'sticky' : 'static'}`);
+                cssChanges.push(`.nav { position: ${state.stickyNav ? 'fixed' : 'static'}; }`);
+            }
+
+            // Button changes
+            if (state.btnPaddingV !== DEFAULTS.btnPaddingV || state.btnPaddingH !== DEFAULTS.btnPaddingH) {
+                changes.push(`button padding to ${state.btnPaddingV}rem ${state.btnPaddingH}rem`);
+                cssChanges.push(`.btn { padding: ${state.btnPaddingV}rem ${state.btnPaddingH}rem; }`);
+            }
+            if (state.btnRadius !== DEFAULTS.btnRadius) {
+                changes.push(`button border radius to ${state.btnRadius}px`);
+                cssChanges.push(`.btn { border-radius: ${state.btnRadius}px; }`);
+            }
+
+            // Typography changes
+            if (state.bodyFontSize !== DEFAULTS.bodyFontSize) {
+                changes.push(`body font size to ${state.bodyFontSize}rem`);
+                cssChanges.push(`body { font-size: ${state.bodyFontSize}rem; }`);
+            }
+            if (state.lineHeight !== DEFAULTS.lineHeight) {
+                changes.push(`line height to ${state.lineHeight}`);
+                cssChanges.push(`body { line-height: ${state.lineHeight}; }`);
+            }
+            if (state.letterSpacing !== DEFAULTS.letterSpacing) {
+                changes.push(`heading letter spacing to ${state.letterSpacing}em`);
+                cssChanges.push(`h1, h2, h3, h4 { letter-spacing: ${state.letterSpacing}em; }`);
+            }
+
+            let prompt;
+            if (changes.length === 0) {
+                prompt = 'No layout changes from the current design.';
+            } else {
+                prompt = `Update the Dan Scott Fitness website layout with these changes:\n\n`;
+                prompt += changes.map((c, i) => `${i + 1}. Change ${c}`).join('\n');
+                prompt += `\n\nCSS changes to apply:\n\n`;
+                prompt += cssChanges.join('\n');
+            }
+
+            document.getElementById('promptText').textContent = prompt;
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptText').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy Prompt';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        applyPreset('current');
+    </script>
+</body>
+</html>
