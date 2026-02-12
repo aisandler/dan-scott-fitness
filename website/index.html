@@ -439,24 +439,30 @@
 
         .bio-toggle-btn {
             display: none;
-            margin-top: 1rem;
-            background: var(--glass-frosted-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-frosted-border);
-            border-radius: var(--glass-radius);
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
             color: var(--orange);
-            padding: 0.6rem 1.25rem;
             font-family: 'Open Sans', sans-serif;
             font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all var(--glass-transition);
+            padding: 0;
+            transition: all 0.3s ease;
         }
 
         .bio-toggle-btn:hover {
-            background: var(--glass-frosted-bg-hover);
-            border-color: var(--orange);
+            color: var(--orange-hover);
+        }
+
+        .bio-toggle-btn .chevron {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .bio-toggle-btn.active .chevron {
+            transform: rotate(180deg);
         }
 
         .credentials {
@@ -1176,7 +1182,7 @@
 
             /* Collapsible bio on mobile */
             .bio-toggle-btn {
-                display: inline-block;
+                display: inline-flex;
             }
 
             .bio-extra.collapsed {
@@ -1650,7 +1656,7 @@
         <div class="about-content">
             <div class="about-text bio-collapsible">
                 <p>
-                    I am a Certified Level Master Trainer (CMT), Certified Personal Trainer (CPT), Certified Nutrition Specialist (CNS), and Certified Strength and Conditioning Coach, with over 20 years of hands-on experience coaching adults toward sustainable strength, performance, and body composition results.
+                    I am a Certified Level Master Trainer (CMT), Certified Personal Trainer (CPT), Certified Nutrition Specialist (CNS), and Certified Strength and Conditioning Coach, with over 20 years of hands-on experience coaching adults toward sustainable strength, performance, and body composition results. <button class="bio-toggle-btn" id="bioToggle" onclick="toggleBio()">Read More <span class="chevron">&#9660;</span></button>
                 </p>
                 <div class="bio-extra collapsed" id="bioExtra">
                     <p>
@@ -1660,7 +1666,6 @@
                         My coaching emphasizes sustainable training, sound movement, practical nutrition, and long-term accountability, all built around the understanding that lasting progress isn't about chasing perfection, but about staying consistent long enough to see and feel real change — <strong>coaching built for real life, because that's where most people actually live.</strong>
                     </p>
                 </div>
-                <button class="bio-toggle-btn" id="bioToggle" onclick="toggleBio()">Read Full Bio</button>
                 <div class="credentials">
                     <span class="credential-tag">CMT</span>
                     <span class="credential-tag">CPT</span>
@@ -1676,10 +1681,10 @@
     <div class="section-dark">
         <section class="section" id="pillars">
             <div class="section-header">
-                <h2 class="section-title">The Four Pillars</h2>
+                <h2 class="section-title">The Four Pillar Training System</h2>
                 <div class="accent-line"></div>
                 <p class="section-subtitle">
-                    The foundation of every coaching plan — built to last.
+                    The foundation of every Dan Scott coaching plan — built to last.
                 </p>
             </div>
             <div class="pillars-section-grid">
@@ -1899,6 +1904,10 @@
                 <li>
                     <span class="check">&#10003;</span>
                     <span>Ongoing program updates based on progress</span>
+                </li>
+                <li>
+                    <span class="check">&#10003;</span>
+                    <span>App access + digital fitness dashboard</span>
                 </li>
             </ul>
             <a href="#" class="btn" style="font-size: 1rem; padding: 1rem 2.5rem;" onclick="openModal(); return false;">Apply for Coaching</a>
@@ -2316,11 +2325,13 @@
             if (extra.classList.contains('collapsed')) {
                 extra.classList.remove('collapsed');
                 extra.classList.add('expanded');
-                btn.textContent = 'Show Less';
+                btn.classList.add('active');
+                btn.innerHTML = 'Show Less <span class="chevron">&#9660;</span>';
             } else {
                 extra.classList.remove('expanded');
                 extra.classList.add('collapsed');
-                btn.textContent = 'Read Full Bio';
+                btn.classList.remove('active');
+                btn.innerHTML = 'Read More <span class="chevron">&#9660;</span>';
             }
         }
 
