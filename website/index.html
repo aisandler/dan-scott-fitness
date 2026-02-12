@@ -437,8 +437,19 @@
             transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
         }
 
+        .bio-extra.collapsed {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .bio-extra.expanded {
+            max-height: 1000px;
+            opacity: 1;
+        }
+
         .bio-toggle-btn {
-            display: none;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             background: none;
@@ -1180,21 +1191,6 @@
                 margin: 0 0.4rem;
             }
 
-            /* Collapsible bio on mobile */
-            .bio-toggle-btn {
-                display: inline-flex;
-            }
-
-            .bio-extra.collapsed {
-                max-height: 0;
-                overflow: hidden;
-                opacity: 0;
-            }
-
-            .bio-extra.expanded {
-                max-height: 1000px;
-                opacity: 1;
-            }
 
             .pillars-section-grid {
                 grid-template-columns: 1fr;
