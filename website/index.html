@@ -956,6 +956,29 @@
             margin-top: 1px;
         }
 
+        .pricing-terms {
+            max-width: 600px;
+            margin: 2rem auto 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.8125rem;
+            line-height: 1.6;
+        }
+
+        .pricing-terms p {
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-terms a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .pricing-terms a:hover {
+            color: var(--orange);
+        }
+
         /* Testimonials Placeholder */
         .testimonials-grid {
             display: grid;
@@ -1179,8 +1202,8 @@
             }
 
             .tagline-bar {
-                bottom: 1.5rem;
-                font-size: 0.65rem;
+                bottom: 6rem;
+                font-size: 0.85rem;
                 letter-spacing: 0.1em;
                 gap: 0.25rem;
             }
@@ -1680,7 +1703,7 @@
                 <h2 class="section-title">The Four Pillar Training System</h2>
                 <div class="accent-line"></div>
                 <p class="section-subtitle">
-                    The foundation of every Dan Scott coaching plan — built to last.
+                    The signature training framework that defines the standard
                 </p>
             </div>
             <div class="pillars-section-grid">
@@ -1798,6 +1821,10 @@
                     <h3>Communication & Support</h3>
                     <p>All communication is centralized and organized. Clear response expectations to avoid overwhelm or confusion. You'll always know what to focus on next.</p>
                 </div>
+                <div class="included-card">
+                    <h3>App Access</h3>
+                    <p>Your training program, nutrition plan, and all coaching communication live in one place. Access workouts, track progress, message directly with me, and stay fully connected between check-ins—anytime, anywhere.</p>
+                </div>
             </div>
         </section>
     </div>
@@ -1877,9 +1904,9 @@
             <div class="accent-line"></div>
         </div>
         <div class="pricing-card">
-            <div class="pricing-amount">$349</div>
+            <div class="pricing-amount">$299</div>
             <div class="pricing-period">per month</div>
-            <div class="pricing-commitment">Billed monthly — 12-month commitment</div>
+            <div class="pricing-commitment">6-month minimum commitment · month-to-month after</div>
             <ul class="pricing-features">
                 <li>
                     <span class="check">&#10003;</span>
@@ -1907,6 +1934,11 @@
                 </li>
             </ul>
             <a href="#" class="btn" style="font-size: 1rem; padding: 1rem 2.5rem;" onclick="openModal(); return false;">Apply for Coaching</a>
+        </div>
+        <div class="pricing-terms">
+            <p>Membership is $299 per month with a 6-month minimum commitment. After the first 6 months, membership continues month-to-month unless canceled.</p>
+            <p>To stop future billing after your commitment period, cancel at least 15 days before your next billing date. If you cancel less than 15 days before your billing date, your membership will be billed for one additional month before cancellation takes effect.</p>
+            <p>To cancel, submit your request via the <a href="#connect">Connect</a> section below.</p>
         </div>
     </section>
 
@@ -1970,9 +2002,10 @@
                 <a href="#pricing">Pricing</a>
                 <a href="#results">Client Results</a>
             </div>
-            <div class="footer-col">
+            <div class="footer-col" id="connect">
                 <h4>Connect</h4>
                 <a href="#" onclick="openModal(); return false;">Apply for Coaching</a>
+                <a href="mailto:dan@danscottfitness.com">dan@danscottfitness.com</a>
             </div>
             <div class="footer-copy">
                 &copy; 2026 Dan Scott Fitness. All rights reserved.
